@@ -1,10 +1,10 @@
 import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
 
 const BOT_NAME = 'rbxdocsearch';
-const DESCRIPTION = 'blazingly fast documentation lookup bot on Discord inspired by [Roblox Docs Search by sleitnick](https://github.com/Sleitnick/rbx-doc-search).';
+const DESCRIPTION = 'blazingly fast documentation lookup bot on Discord inspired by [Roblox Docs Search by sleitnick](https://github.com/Sleitnick/rbx-doc-search) which unironically have the same repo name LOL.';
 
 const COPYLEFT_NOTICE = `
-this bot is open-sourced under GPLv3 license. the Roblox documentation shown here is used under [CC-BY-4.0-DEED](https://github.com/Roblox/creator-docs/blob/main/LICENSE).
+this bot is open-sourced under [GPLv3 license](https://github.com/loominatrx/rbxdocsearch/blob/main/LICENSE). the Roblox documentation shown here is used under [CC-BY-4.0-DEED](https://github.com/Roblox/creator-docs/blob/main/LICENSE).
 its code sample that is shown in the documentation is used under [MIT license](https://github.com/Roblox/creator-docs/blob/main/LICENSE-CODE).
 `;
 
@@ -24,7 +24,11 @@ export default {
 		const embed = new EmbedBuilder()
 			.setTitle(BOT_NAME)
 			.setThumbnail('https://github.com/loominatrx/rbxdocsearch/blob/main/assets/profile-dark.png?raw=true')
-			.setDescription(DESCRIPTION + COPYLEFT_NOTICE)
+			.setDescription(DESCRIPTION)
+			.addFields({
+				name: 'notice',
+				value: COPYLEFT_NOTICE,
+			})
 			.addFields({
 				name: 'runtime',
 				value: `Bun ${Bun.version}`,
