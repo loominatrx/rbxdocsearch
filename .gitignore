@@ -176,3 +176,6 @@ dist
 
 # Roblox docs
 references/*
+
+# bun lockfile
+bun.lockb
