@@ -1,7 +1,7 @@
 <picture>
     <h1>
-    <source media="(prefer-color-scheme: dark)" srcset="assets/profile-dark.png" width="10%" height="10%">
-    <source media="(prefer-color-scheme: light)" srcset="assets/profile-light.png" width="10%" height="10%">
+    <source media="(prefers-color-scheme: dark)" srcset="assets/profile-dark.png" width="10%" height="10%">
+    <source media="(prefers-color-scheme: light)" srcset="assets/profile-light.png" width="10%" height="10%">
     <img src="assets/profile-light.png" width="10%" height="10%"> rbxdocsearch (WIP)
     </h1>
 </picture>
