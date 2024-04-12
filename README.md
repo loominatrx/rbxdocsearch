@@ -1,10 +1,6 @@
-<picture>
-    <h1>
-    <source media="(prefers-color-scheme: dark)" srcset="assets/profile-dark.png" width="10%" height="10%">
-    <img src="assets/profile-light.png" width="10%" height="10%">
-    rbxdocsearch (WIP)
-    </h1>
-</picture>
+<h1><img align="left" src="assets/profile-dark.svg#gh-dark-mode-only" alt="rbxdocsearch" width="40px" height="40px"><img align="left" src="assets/profile-light.svg#gh-light-mode-only" alt="rbxdocsearch" width="40px" height="40px">rbxdocsearch (WIP)</h1>
+
+search roblox documentations using a discord bot.
 
 To install dependencies:
 
