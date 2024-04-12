@@ -98,14 +98,26 @@ const makeReferenceEmbed = (instance, whichInfoToShow, query) => {
 
 	// redirect relative links to docs link
 	let description = parseDescription(details.description);
+	const truncatedNote = `*You are now viewing a summary of the description. If you want a better understanding of this Instance, [please open this documentation page instead.](${url})*`;
 
 	// handle description length
 	if (description.length > 4096) {
+		// masked links tends to take space, so we remove them
+		// completely IF the text hit > 4096 characters
 		description = removeMaskedLinks(description);
 	} else if (description.length === 0) {
-		description = details.summary + `\n\n*'The description is truncated. If you want a better understanding of this Instance', [please open this documentation page instead.](${url})*`;
+		// fallback to the sumamry if there is no description to show
+		description = parseDescription(details.summary) + `\n*${truncatedNote}*`;
 	} else if (details.summary.length === 0) {
+		// inform the user that there is no description available
 		description = `*No description available, [you may open this documentation page instead.](${url})*`;
+	}
+
+	// fallback to summary if the description is still longer than
+	// 4096 characters OR has html tags (like in Player:GetJoinData())
+	// because discord doesn't understand html tags, yet...
+	if (description.length > 4096 || description.match(/<[^>]*>/g)) {
+		description = parseDescription(details.summary) + `\n${truncatedNote}`;
 	}
 
 	const info = [];
@@ -137,7 +149,7 @@ const makeReferenceEmbed = (instance, whichInfoToShow, query) => {
 	embed
 		.setTitle(details.name + (whichInfoToShow === 'method' ? '()' : ''))
 		.setURL(url)
-		.setDescription(`${info.join(' | ')}\n\n${description}`);
+		.setDescription(`${info.join(' | ')}\n—\n${description}`);
 
 	if ((whichInfoToShow === 'method' || whichInfoToShow === 'event') && details.parameters.length >= 1) {
 		const parameterEmbed = new EmbedBuilder()
