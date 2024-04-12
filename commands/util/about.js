@@ -13,9 +13,17 @@ export default {
 		.setName('about')
 		.setDescription('shows something about this bot'),
 	async execute(interaction) {
+		let totalSeconds = (interaction.client.uptime / 1000);
+		const days = Math.floor(totalSeconds / 86400);
+		totalSeconds %= 86400;
+		const hours = Math.floor(totalSeconds / 3600);
+		totalSeconds %= 3600;
+		const minutes = Math.floor(totalSeconds / 60);
+		const seconds = Math.floor(totalSeconds % 60);
+
 		const embed = new EmbedBuilder()
 			.setTitle(BOT_NAME)
-			.setImage('https://github.com/loominatrx/rbxdocsearch/blob/main/assets/profile-dark.png?raw=true')
+			.setThumbnail('https://github.com/loominatrx/rbxdocsearch/blob/main/assets/profile-dark.png?raw=true')
 			.setDescription(DESCRIPTION + COPYLEFT_NOTICE)
 			.addFields({
 				name: 'runtime',
@@ -29,7 +37,7 @@ export default {
 			})
 			.addFields({
 				name: 'uptime',
-				value: `<t:${Date.now() - interaction.client.startTime}>`,
+				value: `${days} days, ${hours} hours, ${minutes} minutes and ${seconds} seconds`,
 				inline: true,
 			})
 			.setFooter({
