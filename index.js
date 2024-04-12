@@ -37,6 +37,7 @@ for (const folder of commandFolders) {
 // The distinction between `client: Client<boolean>` and `readyClient: Client<true>` is important for TypeScript developers.
 // It makes some properties non-nullable.
 client.once(Events.ClientReady, readyClient => {
+	client.startTime = Date.now();
 	console.log(`Ready! Logged in as ${readyClient.user.tag}`);
 	readyClient.user.setActivity('Roblox Documentation', { type: ActivityType.Watching });
 	console.log('Rich presence set!');
