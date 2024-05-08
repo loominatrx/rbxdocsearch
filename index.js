@@ -37,9 +37,9 @@ for (const folder of commandFolders) {
 // The distinction between `client: Client<boolean>` and `readyClient: Client<true>` is important for TypeScript developers.
 // It makes some properties non-nullable.
 client.once(Events.ClientReady, readyClient => {
-	console.log(`Ready! Logged in as ${readyClient.user.tag}`);
+	console.log(`:: Ready! Logged in as ${readyClient.user.tag}`);
 	readyClient.user.setActivity('Roblox Documentation', { type: ActivityType.Watching });
-	console.log('Rich presence set!');
+	console.log(':: Rich presence set!');
 });
 
 // Look for interactions (slash commands)
@@ -81,5 +81,5 @@ client.on(Events.InteractionCreate, async interaction => {
 
 // Log in to Discord with your client's token
 ascii();
-console.log('Logging in...');
+console.log(':: Logging in...');
 client.login(Bun.env.DISCORD_TOKEN);
