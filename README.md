@@ -15,24 +15,33 @@ search roblox documentations using a discord bot.
 
 1. Clone this repository,
 2. Create `.env` with the following config:
-    ```
+
+    ```env
     DISCORD_TOKEN=<your discord bot token>
     GITHUB_TOKEN=<your github PAT>
     CLIENT=<your discord bot client id>
     ```
+
 3. Install required dependencies:
+
     ```bash
     bun install
     ```
+
 4. Fetch the latest documentation from Roblox's [creator-docs](https://github.com/Roblox/creator-docs) repo:
+
     ```bash
     bun fetch-docs.js
     ```
+
 5. Register slash commands:
+
     ```bash
     bun register-commands.js
     ```
+
 6. Run the bot:
+
     ```bash
     bun .
     ```
