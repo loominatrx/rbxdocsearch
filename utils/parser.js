@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { EmbedBuilder } from 'discord.js';
 
-const basePath = path.join(Bun.main, 'references', 'engine', 'classes');
+const basePath = path.join(Bun.main, 'references', 'engine');
 
 const baseUrl = 'https://create.roblox.com/docs';
 const classesUrl = baseUrl + '/reference/engine/classes';
@@ -40,7 +40,7 @@ const parseParameters = (params) => {
 		const description = parseDescription(element.summary);
 		p.push({
 			name: `\`${element.type}\` ${element.name}`,
-			value: `default: \`${(element.default !== null || element.default !== undefined || element.default !== '') ? element.default : 'nil'}\`\n${description}`,
+			value: `default: \`${(element.default !== '') ? element.default : 'nil'}\`\n${description}`,
 			inline: true,
 		});
 	});
@@ -72,10 +72,10 @@ const removeMaskedLinks = (desc) => {
 };
 
 
-const makeReferenceEmbed = (instance, whichInfoToShow, query) => {
+const makeReferenceEmbed = (instance, whichInfoToShow, query, type = 'classes') => {
 	const embed = new EmbedBuilder();
 	const embeds = [embed];
-	const filepath = path.join(basePath, instance + '.yaml');
+	const filepath = path.join(basePath, type, instance + '.yaml');
 
 	if (!fs.existsSync(filepath)) {
 		embed
@@ -92,6 +92,8 @@ const makeReferenceEmbed = (instance, whichInfoToShow, query) => {
 		details = details.events.find(predicate);
 	} else if (whichInfoToShow === 'property') {
 		details = details.properties.find(predicate);
+	} else if (whichInfoToShow === 'function') {
+		details = details.functions.find(predicate);
 	}
 
 	const url = `${classesUrl}/${instance}#${query}`;
@@ -121,44 +123,48 @@ const makeReferenceEmbed = (instance, whichInfoToShow, query) => {
 	}
 
 	const info = [];
-	const hasTags = details.tags.length >= 1;
-	if (hasTags) {
-		info.push(`Tags: \`${details.tags.join(', ')}\``);
-	}
+	if (type === 'classes') {
+		const hasTags = details.tags.length >= 1;
+		if (hasTags) {
+			info.push(`Tags: \`${details.tags.join(', ')}\``);
+		}
 
-	const hasSecurityTag = details.security !== undefined;
-	if (hasSecurityTag) {
-		const isObject = details.security instanceof Object &&
-			details.security.read !== undefined &&
-			details.security.write !== undefined;
-		const isString = details.security instanceof String &&
-			details.security !== '';
+		const hasSecurityTag = details.security !== undefined;
+		if (hasSecurityTag) {
+			const isObject = details.security instanceof Object &&
+				details.security.read !== undefined &&
+				details.security.write !== undefined;
+			const isString = details.security instanceof String &&
+				details.security !== '';
 
-		if (isObject) {
-			info.push(`Security: \`read:${details.security.read}, write:${details.security.write}\``);
-		} else if (isString) {
-			info.push(`Security: \`${details.security}\``);
+			if (isObject) {
+				info.push(`Security: \`read:${details.security.read}, write:${details.security.write}\``);
+			} else if (isString) {
+				info.push(`Security: \`${details.security}\``);
+			}
+		}
+
+		const hasThreadSafetyTag = details.thread_safety !== undefined;
+		if (hasThreadSafetyTag) {
+			info.push(`ThreadSafety: \`${details.thread_safety}\``);
 		}
 	}
 
-	const hasThreadSafetyTag = details.thread_safety !== undefined;
-	if (hasThreadSafetyTag) {
-		info.push(`ThreadSafety: \`${details.thread_safety}\``);
-	}
+	const title = type !== 'classes' ? query : details.name + (whichInfoToShow === 'method' ? '()' : '');
 
 	embed
-		.setTitle(details.name + (whichInfoToShow === 'method' ? '()' : ''))
+		.setTitle(title)
 		.setURL(url)
-		.setDescription(`${info.join(' | ')}\n—\n${description}`);
+		.setDescription(`${info.length > 0 ? info.join(' | ') + '\n—' : ''} \n${description}`);
 
-	if ((whichInfoToShow === 'method' || whichInfoToShow === 'event') && details.parameters.length >= 1) {
+	if ((whichInfoToShow === 'method' || whichInfoToShow === 'function' || whichInfoToShow === 'event') && details.parameters.length >= 1) {
 		const parameterEmbed = new EmbedBuilder()
 			.setTitle('Parameters')
 			.setFields(parseParameters(details.parameters));
 		embeds.push(parameterEmbed);
 	}
 
-	if (whichInfoToShow === 'method' && (details.returns.length >= 1 && details.returns[0].type !== 'void')) {
+	if ((whichInfoToShow === 'method' || whichInfoToShow === 'function') && (details.returns.length >= 1 && details.returns[0].type !== 'void')) {
 		const returnEmbed = new EmbedBuilder()
 			.setTitle('Returned value')
 			.setFields(parseReturnedValues(details.returns));
