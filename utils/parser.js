@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { EmbedBuilder } from 'discord.js';
 
-const basePath = path.join(Bun.main, 'references', 'engine');
+const basePath = path.join(path.dirname(Bun.main), 'references', 'engine');
 
 const baseUrl = 'https://create.roblox.com/docs';
 const classesUrl = baseUrl + '/reference/engine/classes';

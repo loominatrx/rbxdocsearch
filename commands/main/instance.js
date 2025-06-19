@@ -4,9 +4,10 @@ import fs from 'node:fs';
 import path from 'node:path';
 import jsYaml from 'js-yaml';
 
-const basePath = path.join(Bun.main, 'references', 'engine', 'classes');
+const basePath = path.join(path.dirname(Bun.main), 'references', 'engine', 'classes');
 
 const lookup = (instance, query) => {
+	if (!instance || !query) return [];
 	const filepath = path.join(basePath, instance + '.yaml');
 	const details = jsYaml.load(fs.readFileSync(filepath));
 
